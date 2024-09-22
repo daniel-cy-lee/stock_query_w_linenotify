@@ -102,7 +102,8 @@ def query():
     bid: float
     yeastoday: float
     cratio: float
-    time_int: int
+    time_int: int # @Deprecated
+    time_str: str
   def extra_data(data):
     stock = []
     for it in data['msgArray']:
@@ -117,8 +118,9 @@ def query():
       yestoday = a2f(it['y'], 0)
       cratio = (bid - yestoday)/yestoday*100
       time_int = it['tlong']
+      time_str = time2str(it['tlong'])
       next = Stock(id, name, open, high, low, ask_list, buy_list, bid
-             ,yestoday, cratio, time_int)
+             ,yestoday, cratio, time_int, time_str)
       stock.append(next)
 
     return stock
@@ -143,7 +145,6 @@ def stock_2_line():
     msg_str += ("{}({:<6})\n成交價: {:<3.2f}\n漲跌百分比: {:<2.2f}\n委買價: {:.2f}-{:.2f}\n委賣價: {:.2f}-{:.2f}\n最高價: {:<3.2f}\n最低價: {:<3.2f}\n開盤價: {:<3.2f}\n資料更新時間 {}"
         .format(it.name, it.stock_id, it.bid, it.cratio, a2f(it.buy_list[0]), a2f(it.buy_list[-1]),
                 a2f(it.ask_list[0]), a2f(it.ask_list[-1]), it.high, it.low, it.open, time_str)) +"\n\n"
-
   token = MyPassword.line_token_stock
   notify(msg_str, token)
   #notify(msgi_str, MyPassword.line_token_p2p)
